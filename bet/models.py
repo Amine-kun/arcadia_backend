@@ -43,3 +43,8 @@ class FeaturedGames(models.Model):
 	bg = models.URLField()
 	status = models.TextField()
 	plat_form = models.TextField(default="None")
+
+class Notifications(models.Model):
+	user_sender=models.OneToOneField(User, related_name='user_sender' ,null=True, blank=True, on_delete=models.CASCADE)
+	user_revoker=models.ForeignKey(Users, related_name='user_revoker' ,null=True, blank=True, on_delete=models.CASCADE)
+	message=models.CharField(max_length=264, null=True, blank=True)
