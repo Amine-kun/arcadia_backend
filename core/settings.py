@@ -15,12 +15,14 @@ SECRET_KEY = 'django-insecure-e&fiozv9yt916cfj50&jr$rc_ry4ez7vtre8z6g7mn%+w2xe2y
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '6edf-105-158-133-46.eu.ngrok.io']
-
+DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
 
 # Application definition
 
 INSTALLED_APPS = [
     'daphne',
+    'notifications',
+    'notifications_rest',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',

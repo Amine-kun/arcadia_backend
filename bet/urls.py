@@ -1,6 +1,7 @@
 from bet import views
 from django.conf import settings
-from django.urls import path
+from django.urls import path, include, re_path
+
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -15,4 +16,6 @@ urlpatterns = [
     path('user/', views.User),
     path('match/', views.RecordMatch),
     path('test/', views.testEndPoint),
+    path('on_notifications/', views.Notifications),
+
 ]
