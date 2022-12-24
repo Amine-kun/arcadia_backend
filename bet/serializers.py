@@ -86,13 +86,3 @@ class CurrencySerializer(serializers.ModelSerializer):
 	def updateLog(id):
 		return id
 
-
-class NotificationsSerializer (serializers.ModelSerializer):
-	class Meta:
-		model = FeaturedGames
-		fields =('actor_object_id', 'description', 'timestamp')
-
-	def get_notifications(id):
-		req_noti = notification.objects.get(recipient_id=id)
-		userData = NotificationsSerializer(req_noti)
-		return {'userNotis':userData.data}

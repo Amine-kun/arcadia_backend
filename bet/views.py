@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
 from bet.models import FeaturedGames
-from bet.serializers import GamesSerializer, UsersSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, NotificationsSerializer
+from bet.serializers import GamesSerializer, UsersSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer
 
 # App views fns
 
@@ -52,7 +52,7 @@ def User(request):
 		return Response(getUser, status=status.HTTP_200_OK)
 
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def Notifications(request):
     if request.method == 'POST':
@@ -61,9 +61,6 @@ def Notifications(request):
         message = request.POST.get('message')
         notify.send(sender, recipient=receiver, verb='Message', description=message)
         return Response({'response': 'notif has been sent'}, status=status.HTTP_200_OK)
-    elif request.method == 'GET':
-    	user = User.objects.get(id=request.user.id)
-    	return Response(user.notifications.unread(), status=status.HTTP_200_OK)
     else:
         return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)

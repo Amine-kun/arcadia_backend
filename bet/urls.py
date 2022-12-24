@@ -1,6 +1,6 @@
 from bet import views
 from django.conf import settings
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 
 from rest_framework_simplejwt.views import (
@@ -16,6 +16,5 @@ urlpatterns = [
     path('user/', views.User),
     path('match/', views.RecordMatch),
     path('test/', views.testEndPoint),
-    path('on_notifications/', views.Notifications),
 
 ]
