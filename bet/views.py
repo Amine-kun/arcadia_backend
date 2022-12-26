@@ -46,7 +46,7 @@ def getOnGamesView(request):
 
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
-def User(request):
+def currentUser(request):
 	if request.method == 'GET':
 		getUser = UsersSerializer.get_user(request.user.id);
 		return Response(getUser, status=status.HTTP_200_OK)
@@ -56,11 +56,12 @@ def User(request):
 @permission_classes([IsAuthenticated])
 def Notifications(request):
     if request.method == 'POST':
-        sender = User.objects.get(username=request.user)
-        receiver = User.objects.get(id=request.POST.get('user_id'))
-        message = request.POST.get('message')
-        notify.send(sender, recipient=receiver, verb='Message', description=message)
-        return Response({'response': 'notif has been sent'}, status=status.HTTP_200_OK)
+    	notify_data = JSONParser().parse(request)
+    	sender = User.objects.get(id=request.user.id)
+    	receiver = User.objects.get(id=notify_data['receiver_id'])
+    	message = notify_data['message']
+    	notify.send(sender, recipient=receiver, verb='Message', description=message)
+    	return Response({'response': 'notif has been sent'}, status=status.HTTP_200_OK)
     else:
         return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)

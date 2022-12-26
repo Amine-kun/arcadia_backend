@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-e&fiozv9yt916cfj50&jr$rc_ry4ez7vtre8z6g7mn%+w2xe2y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '6edf-105-158-133-46.eu.ngrok.io']
+ALLOWED_HOSTS = ['*']
 DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
 
 # Application definition

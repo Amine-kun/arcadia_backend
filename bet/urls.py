@@ -13,8 +13,9 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.register, name='auth_register'),
     path('on_games/', views.getOnGamesView),
-    path('user/', views.User),
+    path('user/', views.currentUser),
     path('match/', views.RecordMatch),
+    path('send_notification/', views.Notifications),
     path('test/', views.testEndPoint),
 
 ]
