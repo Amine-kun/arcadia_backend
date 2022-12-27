@@ -59,8 +59,9 @@ def Notifications(request):
     	notify_data = JSONParser().parse(request)
     	sender = User.objects.get(id=request.user.id)
     	receiver = User.objects.get(id=notify_data['receiver_id'])
+    	verb = notify_data['verb']
     	message = notify_data['message']
-    	notify.send(sender, recipient=receiver, verb='Message', description=message)
+    	notify.send(sender, recipient=receiver, verb=verb, description=message)
     	return Response({'response': 'notif has been sent'}, status=status.HTTP_200_OK)
     else:
         return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
