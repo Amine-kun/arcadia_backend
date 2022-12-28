@@ -16,6 +16,7 @@ urlpatterns = [
     path('user/', views.currentUser),
     path('match/', views.RecordMatch),
     path('send_notification/', views.Notifications),
+    path('actor_notification/', views.getNotificationActor),
     path('test/', views.testEndPoint),
 
 ]

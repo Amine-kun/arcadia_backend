@@ -17,6 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
 
+
 # Application definition
 
 INSTALLED_APPS = [

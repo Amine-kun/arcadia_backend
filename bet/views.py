@@ -10,8 +10,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
-from bet.models import FeaturedGames
-from bet.serializers import GamesSerializer, UsersSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer
+from bet.models import FeaturedGames, Users
+from bet.serializers import GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, UsersSerializer
 
 # App views fns
 
@@ -27,7 +27,7 @@ def register(request):
 		UserSerializer = UserRegisterSerializer.create(validated_data = user_data)
 
 		if UserSerializer["status"] == 'Success':
-			UserProfile = UsersSerializer.createUser(newlyuser=UserSerializer['data'], validated_data=user_data)
+			UserProfile = MainUserSerializer.createUser(newlyuser=UserSerializer['data'], validated_data=user_data)
 			setCurrencyLog = CurrencySerializer.createLog(newlyuser=UserSerializer['data'])
 			return Response({'data':UserProfile['data']}, status=status.HTTP_200_OK)			
 		else:
@@ -48,7 +48,7 @@ def getOnGamesView(request):
 @permission_classes([IsAuthenticated])
 def currentUser(request):
 	if request.method == 'GET':
-		getUser = UsersSerializer.get_user(request.user.id);
+		getUser = MainUserSerializer.get_user(request.user.id)
 		return Response(getUser, status=status.HTTP_200_OK)
 
 
@@ -67,6 +67,16 @@ def Notifications(request):
         return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getNotificationActor(request):
+	if request.method == 'GET':
+		actor_id = request.GET.get('pid')
+		actor_Data = UsersSerializer.get_data(request.user.id)
+		return Response(actor_Data, status=status.HTTP_200_OK)
+	else :
+		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
+	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

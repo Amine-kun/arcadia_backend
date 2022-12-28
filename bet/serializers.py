@@ -45,14 +45,14 @@ class UserRegisterSerializer (serializers.ModelSerializer):
 
 
 
-class UsersSerializer (serializers.ModelSerializer):
+class MainUserSerializer (serializers.ModelSerializer):
 	class Meta:
 		model = Users
 		fields=('main_id', 'username', 'fname', 'lname', 'email', 'phone', 'country', 'birthday', 'joinedAt')
 
 	def get_user(id):
 		req_user = Users.objects.get(main_id=id)
-		userData = UsersSerializer(req_user)
+		userData = MainUserSerializer(req_user)
 		return {'userData':userData.data}
 
 	def createUser(newlyuser, validated_data):
@@ -71,6 +71,15 @@ class UsersSerializer (serializers.ModelSerializer):
 		except:
 			return {'status':'Error', 'data':'Cannot create the user'}
 
+class UsersSerializer (serializers.ModelSerializer):
+	class Meta:
+		model = Users
+		fields = ('main_id', 'username')
+
+	def get_data(id):
+		req_user = Users.objects.get(main_id=id)
+		dataSer = UsersSerializer(req_user)
+		return {'data':dataSer}
 
 
 class CurrencySerializer(serializers.ModelSerializer):
