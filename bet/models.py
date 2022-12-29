@@ -36,6 +36,12 @@ class Matches(models.Model):
 	game_timestamp = models.IntegerField(default=0)
 	playedAt = models.DateField(default=date.today)
 
+class Lobby(models.Model):
+	id = models.AutoField(primary_key=True)
+	game_id = models.CharField(max_length=100, unique=True)
+	status = models.TextField()
+	players=models.JSONField()
+	createdAt = models.DateField(default=date.today)
 
 class FeaturedGames(models.Model):
 	game = models.TextField()

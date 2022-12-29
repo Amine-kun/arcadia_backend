@@ -1,6 +1,8 @@
 import json 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from bet.models import Lobby
+from bet.serializers import LobbySerializer
 
 
 class PlayerConsumer(AsyncWebsocketConsumer):
@@ -48,10 +50,57 @@ class PlayerConsumer(AsyncWebsocketConsumer):
 			}))
 
 
+@database_sync_to_async
+def handleParty(id, user):
+	checkIfExist = Lobby.objects.get(game_id = id)
+	serializing = LobbySerializer(checkIfExist)
+
+	if "id" in serializing.data:
+		prev_data = checkIfExist.players
+		isExists = False
+
+		for item in prev_data:
+			if "username" in item and item["username"] == user:
+				isExists = True
+				break
+
+		if isExists == False:
+			prev_data.append({'id':user['main_id'],'username':user['username']})
+			checkIfExist.players = prev_data
+			checkIfExist.save()
+			return 'player added'
+		else:
+			return 'player hasnt been added'
+
+	else :
+		return 'player hasne been added'
+
+
+@database_sync_to_async
+def handleCreation(id, user):
+	try:
+		create = Lobby.objects.create(
+		game_id = id,
+		status = 'inLobby',
+		players =[{'id':user['main_id'],'username':user['username']}]
+		)
+		create.save()
+		return True
+	except:
+		return False
+
+@database_sync_to_async
+def getCurrentLobby(id):
+	try:
+		checkIfExist = Lobby.objects.get(game_id = id)
+		serializing = LobbySerializer(checkIfExist)
+		return serializing.data
+	except:
+		return 'There is no such game'
+
 
 class PartyConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		print('connected to party')
 		self.party_id = self.scope['url_route']['kwargs']['game_id']
 		self.party_group_id = 'party_%s' % self.party_id
 
@@ -63,7 +112,6 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		await self.accept()
 
 	async def disconnect(self, close_code):
-		print('disconnected')
 		await self.channel_layer.group_discard(
 			self.party_group_id,
 			self.channel_name
@@ -71,21 +119,31 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
+		user = text_data_json["user"]
+		print(user)
+		
+		if text_data_json['status'] == 'creator':
+			createParty = await handleCreation(self.party_id, user)
+		else:
+			checkForParty = await handleParty(self.party_id, user)
+			print(checkForParty)
+
+		getLobby = await getCurrentLobby(self.party_id)
 
 		await self.channel_layer.group_send(
 			self.party_group_id,
 			{
 				'type' : 'party_check',
-				'user': text_data_json["user"]
+				'data': getLobby
 				
 			}
 			)
 
 	async def party_check(self,event):
-		user = event["user"]
+		getLobby = event["data"]
 
 		await self.send(text_data=json.dumps({
-			'user':user
+			'user':getLobby
 			}))
 
 

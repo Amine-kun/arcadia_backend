@@ -8,7 +8,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from bet.models import FeaturedGames, Users, Friends, Currency, Matches, FeaturedGames
+from bet.models import FeaturedGames, Users, Friends, Currency, Matches, FeaturedGames, Lobby
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 	@classmethod
@@ -95,3 +95,7 @@ class CurrencySerializer(serializers.ModelSerializer):
 	def updateLog(id):
 		return id
 
+class LobbySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Lobby
+		fields =('id','game_id','status','players','createdAt')
