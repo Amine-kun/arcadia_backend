@@ -60,12 +60,12 @@ def handleParty(id, user):
 		isExists = False
 
 		for item in prev_data:
-			if "username" in item and item["username"] == user:
+			if "username" in item and item["username"] == user['username']:
 				isExists = True
 				break
 
 		if isExists == False:
-			prev_data.append({'id':user['main_id'],'username':user['username']})
+			prev_data.append({'id':user['main_id'],'username':user['username'],'profile_picture':user['profile_picture']})
 			checkIfExist.players = prev_data
 			checkIfExist.save()
 			return 'player added'
@@ -82,7 +82,7 @@ def handleCreation(id, user):
 		create = Lobby.objects.create(
 		game_id = id,
 		status = 'inLobby',
-		players =[{'id':user['main_id'],'username':user['username']}]
+		players =[{'id':user['main_id'],'username':user['username'], 'profile_picture':user['profile_picture']}]
 		)
 		create.save()
 		return True
@@ -120,7 +120,7 @@ class PartyConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		user = text_data_json["user"]
-		print(user)
+		print(text_data_json['status'])
 		
 		if text_data_json['status'] == 'creator':
 			createParty = await handleCreation(self.party_id, user)
@@ -143,7 +143,7 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		getLobby = event["data"]
 
 		await self.send(text_data=json.dumps({
-			'user':getLobby
+			'players':getLobby
 			}))
 
 

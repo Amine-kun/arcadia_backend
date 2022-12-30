@@ -8,6 +8,7 @@ from django.contrib.auth.password_validation import validate_password
 class Users(models.Model):
 	id = models.AutoField(primary_key=True)
 	main_id = models.OneToOneField(User, default=None, on_delete=models.CASCADE)
+	profile_picture=models.URLField(default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUzvnAjmVtNv-cX4DuPQ8m-Hems1FMzzVJhw&usqp=CAU')
 	username= models.CharField(max_length=100)
 	fname=models.CharField(max_length=100)
 	lname= models.CharField(max_length=100)
