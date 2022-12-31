@@ -65,7 +65,7 @@ def handleParty(id, user):
 				break
 
 		if isExists == False:
-			prev_data.append({'id':user['main_id'],'username':user['username'],'profile_picture':user['profile_picture']})
+			prev_data.append({'id':user['main_id'],'username':user['username'],'profile_picture':user['profile_picture'], 'state':'Ready'})
 			checkIfExist.players = prev_data
 			checkIfExist.save()
 			return 'player added'
@@ -82,12 +82,35 @@ def handleCreation(id, user):
 		create = Lobby.objects.create(
 		game_id = id,
 		status = 'inLobby',
-		players =[{'id':user['main_id'],'username':user['username'], 'profile_picture':user['profile_picture']}]
+		players =[{'id':user['main_id'],'username':user['username'], 'profile_picture':user['profile_picture'], 'state':'Ready'}]
 		)
 		create.save()
 		return True
 	except:
 		return False
+
+@database_sync_to_async
+def handlePartyClose(id):
+	try:
+		close = Lobby.objects.get(game_id = id)
+		close.status = 'abandoned'
+		close.save()
+		return 'closed'
+	except:
+		return 'didnt closed'
+
+@database_sync_to_async
+def handleRemovePlayer(id, user):
+	try:
+		remove = Lobby.objects.get(game_id=id)
+		prev_players = remove.players
+		new_players = [item for item in prev_players if item['username'] != user['username']]
+		remove.players = new_players
+		remove.save()
+		return 'player removed'
+	except:
+		return 'player isnt removed'
+
 
 @database_sync_to_async
 def getCurrentLobby(id):
@@ -96,7 +119,7 @@ def getCurrentLobby(id):
 		serializing = LobbySerializer(checkIfExist)
 		return serializing.data
 	except:
-		return 'There is no such game'
+		return 404
 
 
 class PartyConsumer(AsyncWebsocketConsumer):
@@ -122,11 +145,18 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		user = text_data_json["user"]
 		print(text_data_json['status'])
 		
-		if text_data_json['status'] == 'creator':
-			createParty = await handleCreation(self.party_id, user)
-		else:
-			checkForParty = await handleParty(self.party_id, user)
-			print(checkForParty)
+		if text_data_json['verb'] == 'open':
+			if text_data_json['status'] == 'creator':
+				createParty = await handleCreation(self.party_id, user)
+			else:
+				checkForParty = await handleParty(self.party_id, user)
+
+		if text_data_json['verb'] == 'close':
+			if text_data_json['status'] == 'creator':
+				closeParty = await handlePartyClose(self.party_id)
+			else :
+				removePlayer = await handleRemovePlayer(self.party_id,user)
+
 
 		getLobby = await getCurrentLobby(self.party_id)
 
