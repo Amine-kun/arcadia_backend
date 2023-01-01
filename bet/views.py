@@ -10,7 +10,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
-from bet.models import FeaturedGames, Users
+import Q
+from bet.models import FeaturedGames, Users, Friends
 from bet.serializers import GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, UsersSerializer
 
 # App views fns
@@ -50,6 +51,23 @@ def currentUser(request):
 	if request.method == 'GET':
 		getUser = MainUserSerializer.get_user(request.user.id)
 		return Response(getUser, status=status.HTTP_200_OK)
+
+
+@api_view(['GET','POST','DELETE'])
+@permission_classes([IsAuthenticated])
+def friends(request):
+	if request.method == 'GET':
+		q = Q(user_id_id = request.user.id) | Q(friend_id=request.user.id)
+		getFriends = Friends.objects.friends(q)
+		return Response({'response': 'you have got friends'}, status=status.HTTP_200_OK)
+
+	elif request.method == 'POST':
+		
+	elif request.method == 'DELETE':
+	else:
+		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
+	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
