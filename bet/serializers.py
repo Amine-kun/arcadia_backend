@@ -25,7 +25,6 @@ class GamesSerializer (serializers.ModelSerializer):
 		fields =('game', 'icon', 'bg', 'status')
 
 
-
 class UserRegisterSerializer (serializers.ModelSerializer):
 	class Meta:
 		model = User
@@ -81,11 +80,16 @@ class UsersSerializer (serializers.ModelSerializer):
 		dataSer = UsersSerializer(req_user)
 		return {'data':dataSer}
 
+class FriendsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model=Friends
+		fields = ('user_id','friend_id')
+
 
 class CurrencySerializer(serializers.ModelSerializer):
 	class Meta:
 		model=Currency
-		fields={'user_id' ,'totalptl'}
+		fields=('user_id' ,'totalptl')
 
 	def createLog(newlyuser):
 		insert_log=Currency.objects.create(user_id=newlyuser)

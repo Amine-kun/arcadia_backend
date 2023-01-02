@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db.models import Q
+from django.db import models
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from django.contrib.auth.models import User
@@ -10,9 +12,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
-import Q
 from bet.models import FeaturedGames, Users, Friends
-from bet.serializers import GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, UsersSerializer
+from bet.serializers import FriendsSerializer, GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, UsersSerializer
 
 # App views fns
 
@@ -57,13 +58,33 @@ def currentUser(request):
 @permission_classes([IsAuthenticated])
 def friends(request):
 	if request.method == 'GET':
-		q = Q(user_id_id = request.user.id) | Q(friend_id=request.user.id)
-		getFriends = Friends.objects.friends(q)
-		return Response({'response': 'you have got friends'}, status=status.HTTP_200_OK)
+		you = MainUserSerializer.get_user(request.user.id)
+		getFriends = Friends.objects.filter(user_id=request.user.id)
+		friendsObj=[]
+
+		for friend in getFriends:
+			friendData=MainUserSerializer.get_user(friend.friend_id)
+			friendsObj.append({'id':friendData['userData']['main_id'],'username':friendData['userData']['username'],'profile_picture':friendData['userData']['profile_picture']})
+
+		return Response({'data':friendsObj}, status=status.HTTP_200_OK)
 
 	elif request.method == 'POST':
-		
+		friendId = JSONParser().parse(request)
+		friend = User.objects.get(id=friendId['id'])
+		addFriendToYou= Friends.objects.create(user_id=request.user.id, friend_id=friend.id)
+		addFriendToYou.save()
+
+		addYouToFriend = Friends.objects.create(user_id=friend.id, friend_id=request.user.id)
+		addYouToFriend.save()
+
+		return Response({'details':'friend request has been accepted'}, status=status.HTTP_200_OK)
+
 	elif request.method == 'DELETE':
+		friendToDelete = request.DELETE.get('uid')
+		deleteFriend = Friends.objects.get(friend_id=friendToDelete)
+		dependencies.delete()
+		return Response({'delete':'You unfriended a friend'})
+
 	else:
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)

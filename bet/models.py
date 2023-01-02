@@ -20,7 +20,7 @@ class Users(models.Model):
 
 class Friends(models.Model):
 	id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+	user_id = models.IntegerField()
 	friend_id = models.IntegerField()
 
 class Currency(models.Model):
