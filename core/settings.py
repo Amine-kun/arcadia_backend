@@ -117,11 +117,11 @@ ASGI_APPLICATION = "core.asgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'betdb',
-        'USER': 'betme',
-        'PASSWORD': 'shiedaKAYN1x',
-        'HOST': 'bet.cckr5vbgiw0z.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': 'defaultdb',
+        'USER': 'doadmin',
+        'PASSWORD': 'AVNS_KK_HHdeF4IdQHlaf9s-',
+        'HOST': 'arcadia-do-user-13233846-0.b.db.ondigitalocean.com',
+        'PORT': '25060',
     }
 }
 

@@ -8,10 +8,11 @@ from django.contrib.auth.password_validation import validate_password
 class Users(models.Model):
 	id = models.AutoField(primary_key=True)
 	main_id = models.OneToOneField(User, default=None, on_delete=models.CASCADE)
-	profile_picture=models.URLField(default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUzvnAjmVtNv-cX4DuPQ8m-Hems1FMzzVJhw&usqp=CAU')
+	profile_picture=models.URLField(default='https://marketplace.canva.com/EAE93oDu61A/1/0/1600w/canva-purple-blue-neon-gaming-desktop-backgrounds-PWYZmwkPtUg.jpg')
 	username= models.CharField(max_length=100)
 	fname=models.CharField(max_length=100)
 	lname= models.CharField(max_length=100)
+	bio= models.CharField(max_length=100, default='You Bio here...')
 	email= models. EmailField(max_length=254, unique=True)
 	phone= models.TextField(default="0")
 	country= models.TextField()

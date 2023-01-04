@@ -47,7 +47,7 @@ class UserRegisterSerializer (serializers.ModelSerializer):
 class MainUserSerializer (serializers.ModelSerializer):
 	class Meta:
 		model = Users
-		fields=('main_id', 'profile_picture' , 'username', 'fname', 'lname', 'email', 'phone', 'country', 'birthday', 'joinedAt')
+		fields=('main_id', 'profile_picture' ,'bio', 'username', 'fname', 'lname', 'email', 'phone', 'country', 'birthday', 'joinedAt')
 
 	def get_user(id):
 		req_user = Users.objects.get(main_id=id)

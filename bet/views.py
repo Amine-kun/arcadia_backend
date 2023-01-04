@@ -108,11 +108,13 @@ def Notifications(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getNotificationActor(request):
+def getActor(request):
 	if request.method == 'GET':
-		actor_id = request.GET.get('pid')
-		actor_Data = UsersSerializer.get_data(request.user.id)
-		return Response(actor_Data, status=status.HTTP_200_OK)
+		user_id = request.GET.get('uid')
+		print(user_id)
+		user_data = MainUserSerializer.get_user(user_id)
+		data = user_data['userData']
+		return Response({'id':data['main_id'], 'username':data['username'], 'profile_picture':data['profile_picture'], 'bio':data['bio']}, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
@@ -122,16 +124,3 @@ def getNotificationActor(request):
 def RecordMatch(request):
 	if request.method == 'POST':
 		return Response({'detail':'match saved'}, status=status.HTTP_200_OK)
-
-
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def testEndPoint(request):
-    if request.method == 'GET':
-        data = f"Congratulation {request.user}, your API just responded to GET request"
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        text = request.POST.get('text')
-        data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
