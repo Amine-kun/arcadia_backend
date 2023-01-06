@@ -18,5 +18,5 @@ urlpatterns = [
     path('send_notification/', views.Notifications),
     path('profile/', views.getActor),
     path('friends/', views.friends),
-
+    path('search/', views.Search),
 ]
