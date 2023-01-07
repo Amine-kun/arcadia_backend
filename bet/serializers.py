@@ -56,7 +56,7 @@ class MainUserSerializer (serializers.ModelSerializer):
 
 	def createUser(newlyuser, validated_data):
 		try:
-			username = lower(validated_data['username'])
+			username = validated_data['username'].lower()
 			user_profile=Users.objects.create(
 			main_id=newlyuser,
 			username=username,

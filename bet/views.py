@@ -123,7 +123,7 @@ def getActor(request):
 def Search(request):
 	if request.method == 'GET':
 		user_id = request.GET.get('q')
-		query = lower(user_id)
+		query = user_id.lower()
 		data = Users.models.get(username=query)
 		return Response({'id':data['main_id'], 'username':data['username'], 'profile_picture':data['profile_picture'], 'bio':data['bio']}, status=status.HTTP_200_OK)
 	else :
