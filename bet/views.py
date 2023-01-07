@@ -127,9 +127,8 @@ def Search(request):
 		data = Users.objects.filter(username__icontains=query)
 		users=[]
 		for user in data:
-			print(user.username)
 			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
-		return Response(users, status=status.HTTP_200_OK)
+		return Response({'data':users}, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
