@@ -124,10 +124,10 @@ def Search(request):
 	if request.method == 'GET':
 		user_id = request.GET.get('q')
 		query = user_id.lower()
-		data = Users.objects.filter(username__icontains=query)
+		data = Users.objects.filter(username__icontains=query).values('main_id','username','profile_picture')
 		users=[]
 		for result in data:
-			users.append({'id':result.main_id,'username':result.username,'profile_picture':result.profile_picture})
+			users.append(result)
 		return Response({'data':users}, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
