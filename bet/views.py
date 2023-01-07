@@ -127,6 +127,7 @@ def Search(request):
 		data = Users.objects.filter(username__icontains=query)
 		users=[]
 		for user in data:
+			print(user)
 			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
 		return Response(users, status=status.HTTP_200_OK)
 	else :
