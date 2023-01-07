@@ -126,9 +126,8 @@ def Search(request):
 		query = user_id.lower()
 		data = Users.objects.filter(username__icontains=query)
 		users=[]
-		for user in data:
-			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
-		print(users)
+		for result in data:
+			users.append({'id':result.main_id,'username':result.username,'profile_picture':result.profile_picture})
 		return Response({'data':users}, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
