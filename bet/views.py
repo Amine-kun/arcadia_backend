@@ -128,6 +128,7 @@ def Search(request):
 		users=[]
 		for user in data:
 			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
+		print(users)
 		return Response({'data':users}, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
