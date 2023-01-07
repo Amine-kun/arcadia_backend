@@ -124,9 +124,11 @@ def Search(request):
 	if request.method == 'GET':
 		user_id = request.GET.get('q')
 		query = user_id.lower()
-		print(query)
-		data = Users.objects.get(username=query)
-		return Response({'id':data['main_id'], 'username':data['username'], 'profile_picture':data['profile_picture'], 'bio':data['bio']}, status=status.HTTP_200_OK)
+		data = Users.objects.filer(username__icontains=query)
+		users=[]
+		for user in data:
+			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
+		return Response(users, status=status.HTTP_200_OK)
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
