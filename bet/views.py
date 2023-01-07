@@ -124,7 +124,7 @@ def Search(request):
 	if request.method == 'GET':
 		user_id = request.GET.get('q')
 		query = user_id.lower()
-		data = Users.objects.filer(username__icontains=query)
+		data = Users.objects.filter(username__icontains=query)
 		users=[]
 		for user in data:
 			users.append({'id':user.main_id,'username':user.username,'profile_picture':user.profile_picture})
