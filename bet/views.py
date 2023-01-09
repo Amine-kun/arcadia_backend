@@ -82,9 +82,9 @@ def friends(request):
 	elif request.method == 'DELETE':
 		friendToDelete = request.GET.get('uid')
 		deleteFriend = Friends.objects.get(friend_id=friendToDelete)
-		target = deleteFriend.username
+		target_user = Users.objects.get(main_id=deleteFriend.friend_id)
 		deleteFriend.delete()
-		return Response({'delete':f'You unfriended {target}'})
+		return Response({'delete':f'You unfriended {target_user.username}'})
 
 	else:
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
