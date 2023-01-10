@@ -19,4 +19,5 @@ urlpatterns = [
     path('profile/', views.getActor),
     path('friends/', views.friends),
     path('search/', views.Search),
+    path('player_points/', views.Points),
 ]

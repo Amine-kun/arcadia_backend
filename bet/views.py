@@ -12,8 +12,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
-from bet.models import FeaturedGames, Users, Friends
-from bet.serializers import FriendsSerializer, GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer, UsersSerializer
+from bet.models import FeaturedGames, Users, Friends, Currency
+from bet.serializers import GamesSerializer, MainUserSerializer, UserRegisterSerializer, MyTokenObtainPairSerializer, CurrencySerializer
 
 # App views fns
 
@@ -133,6 +133,19 @@ def Search(request):
 	else :
 		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def Points(request):
+	if request.method == 'GET':
+		try:			
+			user_id = request.GET.get('uid')
+			user_points = Currency.objects.get(user_id=user_id)
+			return Response({'data':user_points.totalpts}, status=status.HTTP_200_OK)
+		except:
+			return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
+	else:
+		return Response({'response': 'wrong http req'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
