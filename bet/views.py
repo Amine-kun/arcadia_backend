@@ -139,8 +139,7 @@ def Search(request):
 def Points(request):
 	if request.method == 'GET':
 		try:			
-			user_id = request.GET.get('uid')
-			user_points = Currency.objects.get(user_id=user_id)
+			user_points = Currency.objects.get(user_id=request.user.id)
 			return Response({'data':user_points.totalpts}, status=status.HTTP_200_OK)
 		except:
 			return Response({'response': 'something went wrong with sending the notif'}, status=status.HTTP_400_BAD_REQUEST)
