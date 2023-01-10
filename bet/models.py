@@ -27,7 +27,7 @@ class Friends(models.Model):
 class Currency(models.Model):
 	id = models.AutoField(primary_key=True)
 	user_id = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
-	totalpts = models.IntegerField(default=0)
+	totalpts = models.IntegerField(default=10)
 
 class Matches(models.Model):
 	id = models.AutoField(primary_key=True)
