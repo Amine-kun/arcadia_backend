@@ -5,6 +5,9 @@ from bet.models import Lobby
 from bet.serializers import LobbySerializer
 
 
+#######################################################################3
+## handling lobby player validation
+
 class PlayerConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		print('connected')
@@ -49,6 +52,8 @@ class PlayerConsumer(AsyncWebsocketConsumer):
 			'playerData' : playerData
 			}))
 
+##############################################################
+## handling creating/deleting/updating party websocket connection 
 
 @database_sync_to_async
 def handleParty(id, user):
@@ -176,4 +181,5 @@ class PartyConsumer(AsyncWebsocketConsumer):
 			'players':getLobby
 			}))
 
-
+##################################################################
+## handling live games updates
